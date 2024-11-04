@@ -13,7 +13,7 @@ class ISICDataset(Dataset):
         self.targets = df['target'].values
         self.transforms = transforms
         
-    def __len__(self):
+    def __len__(self):  
         return len(self.isic_ids)
     
     def __getitem__(self, index):
@@ -38,37 +38,3 @@ def prepare_loaders(df_train, h5_file, augmentations, CONFIG, num_workers=10):
                               num_workers=num_workers, shuffle=False, pin_memory=True, drop_last=False)
     
     return train_loader
-
-
-
-
-# class ISICDataset(Dataset):
-#     def __init__(self, hdf5_file, csv_file):
-#         # Load image data from hdf5
-#         self.hdf5_data = h5py.File(hdf5_file, 'r')
-#         self.isic_ids = list(self.hdf5_data.keys())
-        
-#         # Load metadata from csv
-#         self.metadata_df = pd.read_csv(csv_file)
-        
-#         # Align metadata with image data based on 'isic_id'
-#         self.metadata_df.set_index('isic_id', inplace=True)
-        
-#     def __len__(self):
-#         return len(self.isic_ids)
-    
-#     def __getitem__(self, idx):
-#         # Get image by isic_id
-#         isic_id = self.isic_ids[idx]
-#         image = self.hdf5_data[isic_id][:]
-        
-#         # Get corresponding metadata
-#         metadata = self.metadata_df.loc[isic_id].values
-        
-#         # Convert to torch tensors
-#         image = torch.tensor(image, dtype=torch.float32)
-#         metadata = torch.tensor(metadata, dtype=torch.float32)
-        
-#         return image, metadata
-
-

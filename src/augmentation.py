@@ -59,7 +59,7 @@ def augment_and_save_images(input_dir,transforms_train):
         # cv2.imwrite(output_path, augmented_image_bgr)
 
 
-# input_dir = r'E:\Dataset\Test'  
-# output_dir = r'E:\Dataset\augmented-images'  #
+# input_dir = r''  
+# output_dir = r''  #
 
 # augment_and_save_images(input_dir, output_dir, transforms_train)

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skin Cancer Detection</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        input[type="file"] {
+            margin: 10px 0;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .result {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Skin Cancer Detection</h1>
+    <form id="upload-form">
+        <input type="file" id="image-file" accept="image/*" required><br>
+        <input type="file" id="csv-file" accept=".csv" required><br>
+        <button type="submit">Submit</button>
+    </form>
+    <div class="result" id="result"></div>
+</div>
+
+<script>
+    document.getElementById('upload-form').addEventListener('submit', async function (e) {
+        e.preventDefault();
+        
+        // Get the files from the input fields
+        const imageFile = document.getElementById('image-file').files[0];
+        const csvFile = document.getElementById('csv-file').files[0];
+
+        if (!imageFile || !csvFile) {
+            alert("Please upload both image and CSV files.");
+            return;
+        }
+
+        // Convert the files to base64
+        const imageBase64 = await fileToBase64(imageFile);
+        const csvBase64 = await fileToBase64(csvFile);
+
+        // Send data to the AWS Lambda function
+        const response = await fetch('/SkinCancerDetection', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                image: imageBase64,
+                metadata_csv: csvBase64,
+            }),
+        });
+
+        // Get the response and show the prediction result
+        const data = await response.json();
+        document.getElementById('result').innerHTML = "Prediction: " + data.prediction;
+    });
+
+    // Helper function to convert file to base64
+    function fileToBase64(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result.split(',')[1]); // Strip off data URL part
+            reader.onerror = error => reject(error);
+            reader.readAsDataURL(file);
+        });
+    }
+</script>
+
+</body>
+</html>
