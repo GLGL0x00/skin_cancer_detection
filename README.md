@@ -40,3 +40,7 @@ The system is deployed on AWS using:
 The interface accepts base64-encoded lesion images and patient metadata through an API. The processed data is analyzed, and the system returns a JSON response indicating the likelihood of malignancy.
 
 ![image](https://github.com/user-attachments/assets/2d082169-1466-4026-9376-f3ac13200fbb)
+
+
+## Documentation
+For detailed project documentation, [click here to view or download the PDF](Skin_Cancer_Detection_Documentation.pdf).
